@@ -1,6 +1,7 @@
 * {
   background-color: dimgray;
 }
+/*media quiers it is not optional  if needed add css reset*/
 .header {
   font-family: Impact;
   font-size: 10vw;
