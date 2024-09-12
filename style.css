@@ -1,0 +1,10 @@
+* {
+  background-color: dimgray;
+}
+.header {
+  font-family: Impact;
+  font-size: 10vw;
+  text-shadow: text-shadow 2px 2px #d7e057;
+  text-decoration: underline 10px;
+  color: darkgoldenrod;
+}
