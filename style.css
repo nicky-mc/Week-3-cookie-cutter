@@ -1,10 +1,11 @@
 * {
   background-color: dimgray;
+  text-align: center;
 }
 /*media quiers it is not optional  if needed add css reset*/
 .header {
   font-family: Impact;
-  font-size: 10vw;
+  font-size: 6vw;
   text-shadow: text-shadow 2px 2px #d7e057;
   text-decoration: underline 10px;
   color: darkgoldenrod;
