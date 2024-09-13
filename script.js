@@ -7,131 +7,145 @@ const volumeControlContainer = document.getElementById(
 );
 const clickSound = document.getElementById("click-sound");
 const resetSound = document.getElementById("reset-sound");
+const toggleMusicButton = document.getElementById("toggle-music");
+const storeButton = document.getElementById("store-button");
+const shopUpgrades = document.getElementById("shop-upgrades");
 audio.volume = 1;
 audio.muted = false;
 optionsButton.addEventListener("click", function () {
-  if (volumeControlContainer.style.display === "none") {
-    volumeControlContainer.style.display = "block";
-  } else {
-    volumeControlContainer.style.display = "none";
-  }
-});
-volumeControl.addEventListener("change", function () {
-  audio.volume = this.value;
-  audio.muted == 0;
+  volumeControlContainer.style.display =
+    volumeControlContainer.style.display === "none" ? "block" : "none";
 });
 
-//we need to store two global values: cookie count and cookies per second
-//choose one way, the one that's easier for you
-let cookieCount = 0;
+volumeControl.addEventListener("change", function () {
+  audio.volume = this.value;
+});
+
+let isMusicPlaying = true;
+toggleMusicButton.addEventListener("click", function () {
+  if (isMusicPlaying) {
+    audio.pause();
+    toggleMusicButton.innerText = "Play Music";
+  } else {
+    audio.play();
+    toggleMusicButton.innerText = "Pause Music";
+  }
+  isMusicPlaying = !isMusicPlaying;
+});
+
+let cookieCount = parseInt(localStorage.getItem("cookieCount")) || 0;
+let cookiesPerSecond = 1;
+
 function updateCookieCount() {
   document.getElementById(
     "cookie-count"
   ).innerText = `Cookie Count: ${cookieCount}`;
+  document.getElementById(
+    "cookies-per-second"
+  ).innerText = `Cookies per Second: ${cookiesPerSecond}`;
+  localStorage.setItem("cookieCount", cookieCount);
 }
 function handleCookieClick() {
   clickSound.currentTime = 0;
   clickSound.play();
   cookieCount++;
   updateCookieCount();
+  animateCookieClick();
 }
 document
   .getElementById("cookie-button")
   .addEventListener("click", handleCookieClick);
 document.getElementById("reset-button").addEventListener("click", function () {
   cookieCount = 0;
+  cookiesPerSecond = 1;
   updateCookieCount();
   resetSound.play();
 });
 
-let cookiesPerSecond = 1;
 setInterval(() => {
   cookieCount += cookiesPerSecond;
   updateCookieCount();
 }, 1000);
 
-//if you choose the stats object, you don't need the global variables above
-let stats = {
-  cookieCount: 0,
-  cookiesPerSecond: 0,
-};
+setInterval(() => {
+  cookiesPerSecond++;
+}, 10000);
+async function getShopUpgrades() {
+  try {
+    const response = await fetch(
+      "https://cookie-upgrade-api.vercel.app/api/upgrades"
+    );
+    const upgrades = await response.json();
+    displayUpgrades(upgrades); // Pass the fetched upgrades
+  } catch (error) {
+    console.error("Error fetching upgrades:", error);
+  }
+}
+function displayUpgrades(upgrades) {
+  const upgradesList = document.getElementById("upgrades-list");
+  upgradesList.innerHTML = "";
 
-//DOM manipulation
-//select the DOM elements (buttons, imgs, p, ...)
+  upgrades.forEach((upgrade) => {
+    const upgradeDiv = document.createElement("div");
+    upgradeDiv.className = "upgrade";
 
-//a way to store the shop upgrades that come from the API
-//let shopUpgrades = ["https://cookie-upgrade-api.vercel.app/api/upgrades"];
+    const upgradeImage = document.createElement("img");
+    upgradeImage.src = upgrade.image;
+    upgradeImage.alt = upgrade.name;
+    upgradeImage.className = "upgrade-image";
+    const upgradeName = document.createElement("h3");
+    upgradeName.innerText = upgrade.name;
 
-//fetch the items from the API --> https://cookie-upgrade-api.vercel.app/api/upgrades
-//function getShopUpgrades() {
-//try {
-//const response = await fetch(
-//  "https://cookie-upgrade-api.vercel.app/api/upgrades"
-//);
-//const upgrades = await response.json();
-//displayUpgrades(shopUpgrades);
-//} catch (error) {}
-//(error) => console.error("error fetching upgrades:", error);
-//}
-//function displayUpgrades(upgrades) {
-//const upgradesList = document.getElementById("upgrade-list");
-//upgradesList.innerHTML = "";
-//upgrades.forEach(upgrade => {
-//const upgradeDiv = document.createElement("div");
-//upgradeDiv.className = "upgrade";
-//const upgradeName = document.createElement("h3");
-//upgradeName.innerText = upgrade.name;
-//const upgradeCost = document.createElement("p");
-//upgradeCost.innerText = `Cost: ${upgrade.cost} cookie`;
-//const purchaseButton = document.createElement("button");
-//purchaseButton.innerText = "buy";
-//purchaseButton.disabled = cookieCount < upgradeCost;
-//purchaseButton.addEventListener("click", function () {
-//if (cookieCount >= upgrade.cost) {
-//cookieCount -= upgrade.cost;
-//updateCookieCount();
-//isplayUpgrades(shopUpgrades);
-//}
-//});
-//fetch the dafutaconst
-//translate it into JSON
-//PUSH the items into the shopUpgrades array above
-//}
+    const upgradeCost = document.createElement("p");
+    upgradeCost.innerText = `Cost: ${upgrade.cost} cookie`;
 
-//an event listener to click on the cookie button
-//select the cookie img or button
-//write your event handler and event listener
+    const purchaseButton = document.createElement("button");
+    purchaseButton.innerText = "Buy";
+    purchaseButton.disabled = cookieCount < upgrade.cost;
 
-//we need a timer that increases the cookieCount value by one every second
+    purchaseButton.addEventListener("click", function () {
+      if (cookieCount >= upgrade.cost) {
+        cookieCount -= upgrade.cost;
+        updateCookieCount();
 
-//I want to increase the value of cookieCount by one every second
-//I want to update the value displayed on the page (this task can also be a separate function, for example, updateCookieCount(), and you would call this function inside the setInterval function)
-//   updateCookieCount();
-//I want to store this value in local storage (this task can also be a separate function, for example, storeLocalStorage(), and you would call this function inside the setInterval function)
-//   storeLocalStorage()
+        if (upgrade.effectType === "increaseCPS") {
+          cookiesPerSecond += upgrade.effectAmount; //
+        } else if (upgrade.effectType === "reduceCost") {
+          upgrade.cost = Math.floor(upgrade.cost * 0.9);
+        }
 
-// function updateCookieCount() {
-//I update the cookieCount value (this is just one option)
-// }
-
-// function storeLocalStorage(){
-// I store the values in local storage (this is just one option)
-// }
-
-//==============================================
-//extra function blocks to give you other ideas
-//these building blocks are just possible solutions to probles you might find
-
-function renderShopUpgrades() {
-  //create DOM elements
-  //you will use a loop or array method
-  shopUpgrades.forEach(function (upgrade) {
-    //for each item in the array, assign the value to a DOM element
-    //append the element to the DOM
+        displayUpgrades(upgrades);
+        animateUpgradePurchase(upgrade.name);
+      }
+    });
+    upgradeDiv.appendChild(upgradeImage);
+    upgradeDiv.appendChild(upgradeName);
+    upgradeDiv.appendChild(upgradeCost);
+    upgradeDiv.appendChild(purchaseButton);
+    upgradesList.appendChild(upgradeDiv);
   });
 }
-
-function saveLocalStorage() {
-  //a method that turns your data into string soup
-  //a method to set the data into key and values in local storage
+function animateCookieClick() {
+  const cookieButton = document.getElementById("cookie-button");
+  cookieButton.classList.add("clicked");
+  setTimeout(() => {
+    cookieButton.classList.remove("clicked");
+  }, 100);
 }
+function animateUpgradePurchase(upgradeName) {
+  const message = document.createElement("div");
+  message.className = "upgrade-message";
+  message.innerText = `Purchased: ${upgradeName}`;
+  document.body.appendChild(message);
+  setTimeout(() => {
+    message.remove();
+  }, 2000);
+}
+document.addEventListener("DOMContentLoaded", function () {
+  audio.muted = false;
+  audio.play().catch((error) => {
+    console.error("Error playing audio:", error);
+  });
+  getShopUpgrades();
+  updateCookieCount();
+});
