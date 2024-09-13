@@ -60,16 +60,43 @@ let stats = {
 //select the DOM elements (buttons, imgs, p, ...)
 
 //a way to store the shop upgrades that come from the API
-let shopUpgrades = ["https://cookie-upgrade-api.vercel.app/api/upgrades"];
+//let shopUpgrades = ["https://cookie-upgrade-api.vercel.app/api/upgrades"];
 
 //fetch the items from the API --> https://cookie-upgrade-api.vercel.app/api/upgrades
-function getShopUpgrades() {
-  const response = await fetch("https://cookie-upgrade-api.vercel.app/api/upgrades");
-  const upgrades = await response.json();
-  //fetch the data
-  //translate it into JSON
-  //PUSH the items into the shopUpgrades array above
-}
+//function getShopUpgrades() {
+//try {
+//const response = await fetch(
+//  "https://cookie-upgrade-api.vercel.app/api/upgrades"
+//);
+//const upgrades = await response.json();
+//displayUpgrades(shopUpgrades);
+//} catch (error) {}
+//(error) => console.error("error fetching upgrades:", error);
+//}
+//function displayUpgrades(upgrades) {
+//const upgradesList = document.getElementById("upgrade-list");
+//upgradesList.innerHTML = "";
+//upgrades.forEach(upgrade => {
+//const upgradeDiv = document.createElement("div");
+//upgradeDiv.className = "upgrade";
+//const upgradeName = document.createElement("h3");
+//upgradeName.innerText = upgrade.name;
+//const upgradeCost = document.createElement("p");
+//upgradeCost.innerText = `Cost: ${upgrade.cost} cookie`;
+//const purchaseButton = document.createElement("button");
+//purchaseButton.innerText = "buy";
+//purchaseButton.disabled = cookieCount < upgradeCost;
+//purchaseButton.addEventListener("click", function () {
+//if (cookieCount >= upgrade.cost) {
+//cookieCount -= upgrade.cost;
+//updateCookieCount();
+//isplayUpgrades(shopUpgrades);
+//}
+//});
+//fetch the dafutaconst
+//translate it into JSON
+//PUSH the items into the shopUpgrades array above
+//}
 
 //an event listener to click on the cookie button
 //select the cookie img or button
