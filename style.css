@@ -1,12 +1,41 @@
 * {
-  background-color: dimgray;
   text-align: center;
+  /*background-image: url(assets/IMG_3243.GIF);
+  background-size: cover;
+  background-repeat: no-repeat; */
 }
+
 /*media quiers it is not optional  if needed add css reset*/
 .header {
   font-family: Impact;
   font-size: 6vw;
-  text-shadow: text-shadow 2px 2px #d7e057;
+  text-shadow: text-shadow 2px 2px #000000;
   text-decoration: underline 10px;
   color: darkgoldenrod;
+}
+h2 {
+  font-family: Impact;
+  color: darkgoldenrod;
+  text-shadow: text-shadow 2px 2px #000000;
+}
+.backingTrack {
+  display: none;
+}
+button {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+label {
+  font-size: 25px;
+}
+#shop-upgrades {
+  display: none;
+}
+tab {
+  background-color: darkcyan;
+  column-rule-color: bisque;
 }

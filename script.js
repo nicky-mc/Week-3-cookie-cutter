@@ -1,8 +1,54 @@
 console.log("do you like cookies?");
+const audio = document.querySelector(".backingTrack");
+const optionsButton = document.getElementById("options-button");
+const volumeControl = document.getElementById("volume-control");
+const volumeControlContainer = document.getElementById(
+  "volume-control-container"
+);
+const clickSound = document.getElementById("click-sound");
+const resetSound = document.getElementById("reset-sound");
+audio.volume = 1;
+audio.muted = false;
+optionsButton.addEventListener("click", function () {
+  if (volumeControlContainer.style.display === "none") {
+    volumeControlContainer.style.display = "block";
+  } else {
+    volumeControlContainer.style.display = "none";
+  }
+});
+volumeControl.addEventListener("change", function () {
+  audio.volume = this.value;
+  audio.muted == 0;
+});
+
 //we need to store two global values: cookie count and cookies per second
 //choose one way, the one that's easier for you
 let cookieCount = 0;
-let cookiesPerSecond = 0;
+function updateCookieCount() {
+  document.getElementById(
+    "cookie-count"
+  ).innerText = `Cookie Count: ${cookieCount}`;
+}
+function handleCookieClick() {
+  clickSound.currentTime = 0;
+  clickSound.play();
+  cookieCount++;
+  updateCookieCount();
+}
+document
+  .getElementById("cookie-button")
+  .addEventListener("click", handleCookieClick);
+document.getElementById("reset-button").addEventListener("click", function () {
+  cookieCount = 0;
+  updateCookieCount();
+  resetSound.play();
+});
+
+let cookiesPerSecond = 1;
+setInterval(() => {
+  cookieCount += cookiesPerSecond;
+  updateCookieCount();
+}, 1000);
 
 //if you choose the stats object, you don't need the global variables above
 let stats = {
@@ -14,10 +60,12 @@ let stats = {
 //select the DOM elements (buttons, imgs, p, ...)
 
 //a way to store the shop upgrades that come from the API
-let shopUpgrades = [];
+let shopUpgrades = ["https://cookie-upgrade-api.vercel.app/api/upgrades"];
 
 //fetch the items from the API --> https://cookie-upgrade-api.vercel.app/api/upgrades
 function getShopUpgrades() {
+  const response = await fetch("https://cookie-upgrade-api.vercel.app/api/upgrades");
+  const upgrades = await response.json();
   //fetch the data
   //translate it into JSON
   //PUSH the items into the shopUpgrades array above
@@ -26,20 +74,14 @@ function getShopUpgrades() {
 //an event listener to click on the cookie button
 //select the cookie img or button
 //write your event handler and event listener
-function handleCookieClick() {
-  //when I click on the cookie, the value of cookieCount goes up by one
-}
-
-addEventListener("click", handleCookieClick);
 
 //we need a timer that increases the cookieCount value by one every second
-setInterval(function () {
-  //I want to increase the value of cookieCount by one every second
-  //I want to update the value displayed on the page (this task can also be a separate function, for example, updateCookieCount(), and you would call this function inside the setInterval function)
-  //   updateCookieCount();
-  //I want to store this value in local storage (this task can also be a separate function, for example, storeLocalStorage(), and you would call this function inside the setInterval function)
-  //   storeLocalStorage()
-}, 1000);
+
+//I want to increase the value of cookieCount by one every second
+//I want to update the value displayed on the page (this task can also be a separate function, for example, updateCookieCount(), and you would call this function inside the setInterval function)
+//   updateCookieCount();
+//I want to store this value in local storage (this task can also be a separate function, for example, storeLocalStorage(), and you would call this function inside the setInterval function)
+//   storeLocalStorage()
 
 // function updateCookieCount() {
 //I update the cookieCount value (this is just one option)

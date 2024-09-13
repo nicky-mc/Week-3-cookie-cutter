@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="assets/favicon.ico">
     <title>Click my Cookie</title>
   </head>
   <body>
@@ -16,11 +17,38 @@
       <button id="cookie-button">
         <img src="/assets/cookie-sad.gif" alt="sad cookie being eeaten" />
       </button>
-      <button id="reset-button">Reset button</button>
+      <button id="reset-button">
+        <img src="assets/output-onlinegiftools.gif" alt="Yeet button" />
+      </button>
       <p id="cookie-count">Cookie Count: 0</p>
       <p id="cookies-per-second">Cookies per Second: 0</p>
+      <div id="shop-upgrades">
+        <h2>Cookie Pawn Shop</h2>
+        <div id="upgrades-list"></div>
+      </div>
+      <button id="options-button"><img src="assets/options-removebg-preview.png" width="150px" alt="options menu"></button>
+      <div id="volume-control-container" style="display: none;">
+        <label for="volume-control">Volume:</label>
+        <select id="volume-control" size="1">
+            <option value="1">100%</option>
+            <option value="0.75">75%</option>
+            <option value="0.5">50%</option>
+            <option value="0.25">25%</option>
+            <option value="0">Mute</option>
+        </select>
+      <audio
+        class="backingTrack"
+        autoplay
+        loop
+        muted
+        src="assets/Cyberpunk 2077 — Chippin’ In by SAMURAI _ 8-bit cover [ ezmp3.cc ].mp3"
+        type="audio/mpeg"
+      ></audio>
+      <audio id="click-sound" src="assets/eating-a-cracker-mouth-open-81375.mp3" preload="auto"></audio>
+      <audio id="reset-sound" src="assets/yeet-sound-37727.mp3" preload="auto"></audio>
     </main>
-    <footer></footer>
+    <footer> 
+    </footer>
   </body>
   <script src="script.js"></script>
 </html>
