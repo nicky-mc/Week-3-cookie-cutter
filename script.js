@@ -45,13 +45,21 @@ function updateCookieCount() {
   ).innerText = `Cookies per Second: ${cookiesPerSecond}`;
   localStorage.setItem("cookieCount", cookieCount);
 }
-function handleCookieClick() {
+//DEBOUNCE FUNCTION TO TRY AND CIRCUMVENT AN ERROR WHEN AUTO CLICKER IS PURCHASED AND BY PASSES THE SOUND THAT WOULD NORMALLY HAPPEN WHEN THE USER CLICKS THE COOKIE BUTTON
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+const handleCookieClick = debounce(() => {
   clickSound.currentTime = 0;
   clickSound.play();
   cookieCount++;
   updateCookieCount();
   animateCookieClick();
-}
+}, 100);
 document
   .getElementById("cookie-button")
   .addEventListener("click", handleCookieClick);
@@ -76,7 +84,7 @@ async function getShopUpgrades() {
       "https://cookie-upgrade-api.vercel.app/api/upgrades"
     );
     const upgrades = await response.json();
-    displayUpgrades(upgrades); // Pass the fetched upgrades
+    displayUpgrades(upgrades);
   } catch (error) {
     console.error("Error fetching upgrades:", error);
   }
@@ -88,11 +96,6 @@ function displayUpgrades(upgrades) {
   upgrades.forEach((upgrade) => {
     const upgradeDiv = document.createElement("div");
     upgradeDiv.className = "upgrade";
-
-    const upgradeImage = document.createElement("img");
-    upgradeImage.src = upgrade.image;
-    upgradeImage.alt = upgrade.name;
-    upgradeImage.className = "upgrade-image";
     const upgradeName = document.createElement("h3");
     upgradeName.innerText = upgrade.name;
 
@@ -102,23 +105,19 @@ function displayUpgrades(upgrades) {
     const purchaseButton = document.createElement("button");
     purchaseButton.innerText = "Buy";
     purchaseButton.disabled = cookieCount < upgrade.cost;
-
     purchaseButton.addEventListener("click", function () {
       if (cookieCount >= upgrade.cost) {
         cookieCount -= upgrade.cost;
         updateCookieCount();
-
         if (upgrade.effectType === "increaseCPS") {
           cookiesPerSecond += upgrade.effectAmount; //
         } else if (upgrade.effectType === "reduceCost") {
           upgrade.cost = Math.floor(upgrade.cost * 0.9);
         }
-
         displayUpgrades(upgrades);
         animateUpgradePurchase(upgrade.name);
       }
     });
-    upgradeDiv.appendChild(upgradeImage);
     upgradeDiv.appendChild(upgradeName);
     upgradeDiv.appendChild(upgradeCost);
     upgradeDiv.appendChild(purchaseButton);
@@ -143,9 +142,6 @@ function animateUpgradePurchase(upgradeName) {
 }
 document.addEventListener("DOMContentLoaded", function () {
   audio.muted = false;
-  audio.play().catch((error) => {
-    console.error("Error playing audio:", error);
-  });
   getShopUpgrades();
   updateCookieCount();
 });
