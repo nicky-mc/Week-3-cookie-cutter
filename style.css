@@ -4,17 +4,46 @@
   margin: 0;
   padding: 0;
 }
+@media (max-width: 600px) {
+  .header {
+    font-size: 1.5em;
+  }
+  h2 {
+    font-size: 1.2em;
+  }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  .header {
+    font-size: 2em;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+}
+@media (min-width: 901px) {
+  .header {
+    font-size: 3em;
+  }
+  h2 {
+    font-size: 2em;
+  }
+  img {
+    width: 150px;
+  }
+}
 body {
   background-color: #f0f0f0;
 }
 .header {
-  font-size: 3em;
+  font-size: 2em;
   color: #5a3e24;
   text-shadow: 1px 1px 2px #fff;
   margin-bottom: 20px;
 }
 h2 {
   color: #6a4f4b;
+  font-size: 1.5em;
+  margin: 10px 0;
 }
 .game-area {
   margin: 20px;
@@ -28,6 +57,42 @@ button {
 }
 button:hover {
   transform: scale(1.05);
+}
+body.light-theme {
+  background-color: #f0f0f0;
+  color: #5a3e24;
+}
+.header.light-theme {
+  color: #5a3e24;
+}
+h2.light-theme {
+  color: #6a4f4b;
+}
+button.light-theme {
+  color: #5a3e24;
+}
+.options-menu.light-theme {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+body.dark-theme {
+  background-color: #333;
+  color: #fff;
+}
+.header.dark-theme {
+  color: #fff;
+}
+h2.dark-theme {
+  color: #ddd;
+}
+button.dark-theme {
+  color: #fff;
+}
+.options-menu.dark-theme {
+  background-color: #444;
+  color: #fff;
+  border: 1px solid #666;
 }
 .store-container {
   position: relative;
@@ -74,10 +139,8 @@ button:hover {
 }
 .options-menu {
   position: absolute;
-  top: 40px;
+  top: 80px;
   right: 10px;
-  background: #fff;
-  border: 1px solid #ccc;
   z-index: 1;
   width: 100px;
   padding: 10px;

@@ -32,7 +32,7 @@
         <p id="cookies-per-second" aria-live="polite">Cookies per Second: 0</p>
       </div>
       <div class="store-container">
-        <button id="store-button">
+        <button id="store-button" aria-label="upgrade shop">
           <img
             src="assets/output-onlinegiftools (1).gif"
             alt="pop up shop"
@@ -50,7 +50,7 @@
           src="assets/options-removebg-preview.png"
           alt="option menu"
           aria-label="Options"
-          width="80px"
+          width="50px"
         />
       </button>
       <div
@@ -66,9 +66,15 @@
           max="1"
           step="0.01"
           value="1"
+          aria-label="volume-control"
         />
         <br />
-        <button id="toggle-music">Pause Music</button>
+        <button id="toggle-music" aria-label="toggle-music Music">
+          Pause Music</button
+        ><br />
+        <button id="theme-toggle" aria-label="Theme Toggle">
+          Toggle Theme
+        </button>
       </div>
       <audio
         class="backingTrack"
