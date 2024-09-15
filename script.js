@@ -14,7 +14,7 @@ const shopUpgrades = document.getElementById("shop-upgrades");
 audio.volume = 1;
 audio.muted = false;
 
-// Show or hide the volume control when the options button is clicked
+// Show or hide the volume control when the option button is clicked
 optionsButton.addEventListener("click", function () {
   if (volumeControlContainer.style.display === "none") {
     volumeControlContainer.style.display = "block";
@@ -23,9 +23,15 @@ optionsButton.addEventListener("click", function () {
   }
 });
 
-// Change the audio volume based on the selected option
-volumeControl.addEventListener("change", function () {
+// Change the audio volume based on the selected input
+volumeControl.addEventListener("input", function () {
   audio.volume = this.value;
+  localStorage.setItem("audioVolume", this.value);
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const savedVolume = localStorage.getItem("audioVolume") || "1";
+  volumeControl.value = savedVolume;
+  audio.volume = savedVolume;
 });
 
 let isMusicPlaying = true;
@@ -45,16 +51,32 @@ toggleMusicButton.addEventListener("click", function () {
 // Load cookie count from local storage or set to 0
 let cookieCount = parseInt(localStorage.getItem("cookieCount")) || 0;
 let cookiesPerSecond = 1;
-
-// Function to update cookie count displayed on the screen
+let autoClicks = 0;
 function updateCookieCount() {
   document.getElementById("cookie-count").innerText =
     "Cookie Count: " + cookieCount;
   document.getElementById("cookies-per-second").innerText =
-    "Cookies per Second: " + cookiesPerSecond;
+    "Cookies per Second: " + (cookiesPerSecond + autoClicks);
   localStorage.setItem("cookieCount", cookieCount);
+  updateUpgradeButtons();
 }
+// Function to update cookie count displayed on the screen
 
+function updateCookieCount() {
+  document.getElementById("cookie-count").innerText =
+    "Cookie Count: " + cookieCount;
+  document.getElementById("cookies-per-second").innerText =
+    "Cookies per Second: " + (cookiesPerSecond + autoClicks);
+  localStorage.setItem("cookieCount", cookieCount);
+  updateUpgradeButtons();
+}
+function updateUpgradeButtons() {
+  const upgradeButtons = document.querySelectorAll(".upgrade button");
+  upgradeButtons.forEach((button) => {
+    const cost = parseInt(button.dataset.cost);
+    button.disabled = cookieCount < cost;
+  });
+}
 // Debounce function to handle rapid clicks on the cookie button
 function debounce(func, wait) {
   let timeout;
@@ -90,10 +112,11 @@ setInterval(function () {
   cookieCount += cookiesPerSecond;
   updateCookieCount();
 }, 1000);
-// Increase cookies per second every 10 seconds
+// increases cookies persecond dependant on autoclicks bought
 setInterval(function () {
-  cookiesPerSecond++;
-}, 10000);
+  cookieCount += cookiesPerSecond + autoClicks;
+}, 1000);
+
 // Function to get shop upgrades from the API
 async function getShopUpgrades() {
   try {
@@ -123,19 +146,15 @@ function displayUpgrades(upgrades) {
 
     const purchaseButton = document.createElement("button");
     purchaseButton.innerText = "Buy";
+    purchaseButton.dataset.cost = upgrade.cost;
     purchaseButton.disabled = cookieCount < upgrade.cost;
 
     purchaseButton.addEventListener("click", function () {
       if (cookieCount >= upgrade.cost) {
         cookieCount -= upgrade.cost;
+        autoClicks += 1; // Increase auto clicks
         updateCookieCount();
-
-        if (upgrade.effectType === "increaseCPS") {
-          cookiesPerSecond += upgrade.effectAmount;
-        } else if (upgrade.effectType === "reduceCost") {
-          upgrade.cost = Math.floor(upgrade.cost * 0.9);
-        }
-        displayUpgrades(upgrades);
+        displayUpgrades(upgrades); // Refresh upgrades display
       }
     });
 
