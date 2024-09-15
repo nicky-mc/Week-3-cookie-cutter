@@ -32,6 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const savedVolume = localStorage.getItem("audioVolume") || "1";
   volumeControl.value = savedVolume;
   audio.volume = savedVolume;
+  clickSound.volume = savedVolume;
+  resetSound.volume = savedVolume;
 });
 
 let isMusicPlaying = true;
