@@ -10,18 +10,27 @@ const resetSound = document.getElementById("reset-sound");
 const toggleMusicButton = document.getElementById("toggle-music");
 const storeButton = document.getElementById("store-button");
 const shopUpgrades = document.getElementById("shop-upgrades");
+
 audio.volume = 1;
 audio.muted = false;
+
+// Show or hide the volume control when the options button is clicked
 optionsButton.addEventListener("click", function () {
-  volumeControlContainer.style.display =
-    volumeControlContainer.style.display === "none" ? "block" : "none";
+  if (volumeControlContainer.style.display === "none") {
+    volumeControlContainer.style.display = "block";
+  } else {
+    volumeControlContainer.style.display = "none";
+  }
 });
 
+// Change the audio volume based on the selected option
 volumeControl.addEventListener("change", function () {
   audio.volume = this.value;
 });
 
 let isMusicPlaying = true;
+
+// Toggle music play and pause
 toggleMusicButton.addEventListener("click", function () {
   if (isMusicPlaying) {
     audio.pause();
@@ -33,36 +42,42 @@ toggleMusicButton.addEventListener("click", function () {
   isMusicPlaying = !isMusicPlaying;
 });
 
+// Load cookie count from local storage or set to 0
 let cookieCount = parseInt(localStorage.getItem("cookieCount")) || 0;
 let cookiesPerSecond = 1;
 
+// Function to update cookie count displayed on the screen
 function updateCookieCount() {
-  document.getElementById(
-    "cookie-count"
-  ).innerText = `Cookie Count: ${cookieCount}`;
-  document.getElementById(
-    "cookies-per-second"
-  ).innerText = `Cookies per Second: ${cookiesPerSecond}`;
+  document.getElementById("cookie-count").innerText =
+    "Cookie Count: " + cookieCount;
+  document.getElementById("cookies-per-second").innerText =
+    "Cookies per Second: " + cookiesPerSecond;
   localStorage.setItem("cookieCount", cookieCount);
 }
-//DEBOUNCE FUNCTION TO TRY AND CIRCUMVENT AN ERROR WHEN AUTO CLICKER IS PURCHASED AND BY PASSES THE SOUND THAT WOULD NORMALLY HAPPEN WHEN THE USER CLICKS THE COOKIE BUTTON
+
+// Debounce function to handle rapid clicks on the cookie button
 function debounce(func, wait) {
   let timeout;
-  return function (...args) {
+  return function () {
+    let context = this;
+    let args = arguments;
     clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
+    timeout = setTimeout(function () {
+      func.apply(context, args);
+    }, wait);
   };
 }
-const handleCookieClick = debounce(() => {
+const handleCookieClick = debounce(function () {
   clickSound.currentTime = 0;
   clickSound.play();
   cookieCount++;
   updateCookieCount();
-  animateCookieClick();
 }, 100);
+// Handle cookie button clicks
 document
   .getElementById("cookie-button")
   .addEventListener("click", handleCookieClick);
+// Handle reset button clicks
 document.getElementById("reset-button").addEventListener("click", function () {
   cookieCount = 0;
   cookiesPerSecond = 1;
@@ -70,14 +85,16 @@ document.getElementById("reset-button").addEventListener("click", function () {
   resetSound.play();
 });
 
-setInterval(() => {
+// Increase cookie count every second
+setInterval(function () {
   cookieCount += cookiesPerSecond;
   updateCookieCount();
 }, 1000);
-
-setInterval(() => {
+// Increase cookies per second every 10 seconds
+setInterval(function () {
   cookiesPerSecond++;
 }, 10000);
+// Function to get shop upgrades from the API
 async function getShopUpgrades() {
   try {
     const response = await fetch(
@@ -89,57 +106,47 @@ async function getShopUpgrades() {
     console.error("Error fetching upgrades:", error);
   }
 }
+// Function to display upgrades in the shop
 function displayUpgrades(upgrades) {
   const upgradesList = document.getElementById("upgrades-list");
   upgradesList.innerHTML = "";
 
-  upgrades.forEach((upgrade) => {
+  upgrades.forEach(function (upgrade) {
     const upgradeDiv = document.createElement("div");
     upgradeDiv.className = "upgrade";
+
     const upgradeName = document.createElement("h3");
     upgradeName.innerText = upgrade.name;
 
     const upgradeCost = document.createElement("p");
-    upgradeCost.innerText = `Cost: ${upgrade.cost} cookie`;
+    upgradeCost.innerText = "Cost: " + upgrade.cost + " cookie";
 
     const purchaseButton = document.createElement("button");
     purchaseButton.innerText = "Buy";
     purchaseButton.disabled = cookieCount < upgrade.cost;
+
     purchaseButton.addEventListener("click", function () {
       if (cookieCount >= upgrade.cost) {
         cookieCount -= upgrade.cost;
         updateCookieCount();
+
         if (upgrade.effectType === "increaseCPS") {
-          cookiesPerSecond += upgrade.effectAmount; //
+          cookiesPerSecond += upgrade.effectAmount;
         } else if (upgrade.effectType === "reduceCost") {
           upgrade.cost = Math.floor(upgrade.cost * 0.9);
         }
         displayUpgrades(upgrades);
-        animateUpgradePurchase(upgrade.name);
       }
     });
+
     upgradeDiv.appendChild(upgradeName);
     upgradeDiv.appendChild(upgradeCost);
     upgradeDiv.appendChild(purchaseButton);
     upgradesList.appendChild(upgradeDiv);
   });
 }
-function animateCookieClick() {
-  const cookieButton = document.getElementById("cookie-button");
-  cookieButton.classList.add("clicked");
-  setTimeout(() => {
-    cookieButton.classList.remove("clicked");
-  }, 100);
-}
-function animateUpgradePurchase(upgradeName) {
-  const message = document.createElement("div");
-  message.className = "upgrade-message";
-  message.innerText = `Purchased: ${upgradeName}`;
-  document.body.appendChild(message);
-  setTimeout(() => {
-    message.remove();
-  }, 2000);
-}
+
+// When the page loads
 document.addEventListener("DOMContentLoaded", function () {
   audio.muted = false;
   getShopUpgrades();
