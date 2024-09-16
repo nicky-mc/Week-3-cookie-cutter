@@ -2,7 +2,7 @@
 
 Well this was a complex project. first i seemed to have named it cookie cutter instead of cookie clicker.
 I began with the idea of what i was envisioning, unfortunately that then drew my focus for longer than it should have. so once I had a barebones option menu and audio and buttons as required I moved to game functionality.
-I then stopped and first concentrated on having cookie counter increase with each cookie click. Once I got this working. I then got to work setting the "Yeetset"(reset) button. For this I had to do some research across various sites and inspection of other versions of the game to understand and find functions that I could adapt for my requirements.
+I then stopped and first concentrated on having cookie counter increase with each cookie click. Once I got this working. I then got to work setting the "Yeetset"(reset) button. For this I had to do some research across various sites and inspection of other versions of the game to understand and find functions that I could adapt for my requirements then with the reset button I set the function to set the cookieCount and cookiesPerSecond back to zero.
 This inclded a incremental increase per second of cookie count. as well as adding a increase dependant on how many auto clicks you buy.
 I then put in the function to fetch the upgrade store or "cookie pawn shop", after reading one of the stretch goals og including and error function I researched how to include this.
 I then followed up with crteate Element to allow the JavaScript to place this inside the page.
